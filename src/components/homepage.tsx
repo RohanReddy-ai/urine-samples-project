@@ -26,33 +26,33 @@ export function Homepage() {
       icon: Users,
       title: "Human-in-the-Loop",
       description: "AI handles routine queries with seamless human escalation when needed.",
-      color: "text-green-600"
+      color: "text-blue-700"
     },
     {
       icon: Clock,
       title: "24/7 Availability",
       description: "Always available to handle patient calls and appointment booking.",
-      color: "text-purple-600"
+      color: "text-blue-800"
     },
     {
       icon: Shield,
       title: "NHS Compliant",
       description: "Fully compliant with NHS regulatory and data protection standards.",
-      color: "text-indigo-600"
+      color: "text-blue-900"
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-200">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-green-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
                 <Phone className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                 Health Line AI
               </span>
             </div>
@@ -85,7 +85,7 @@ export function Homepage() {
             <Badge className="mb-6 bg-blue-100 text-blue-700 hover:bg-blue-200">
               Revolutionizing Primary Care Access
             </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 bg-clip-text text-transparent">
               Voice-Based AI Receptionist
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-4 max-w-4xl mx-auto">
@@ -95,7 +95,7 @@ export function Homepage() {
               Making healthcare truly accessible for everyone without the need for apps or online forms
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700" asChild>
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900" asChild>
                 <Link href="/demo">
                   <Play className="w-5 h-5 mr-2" />
                   Try Live Demo
@@ -204,7 +204,7 @@ export function Homepage() {
       </section>
 
       {/* Solution Section */}
-      <section id="solution" className="py-20 px-4 bg-gradient-to-br from-green-50 to-blue-50">
+      <section id="solution" className="py-20 px-4 bg-gradient-to-br from-blue-50 to-blue-100">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -234,19 +234,19 @@ export function Homepage() {
               </p>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-6 h-6 text-blue-600 mt-0.5 flex-shrink-0" />
                   <div>
                     <strong>Intelligent Escalation:</strong> AI recognizes when human judgment is needed
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-6 h-6 text-blue-600 mt-0.5 flex-shrink-0" />
                   <div>
                     <strong>Real-time Dashboard:</strong> Staff can monitor and take over any interaction
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-6 h-6 text-blue-600 mt-0.5 flex-shrink-0" />
                   <div>
                     <strong>Seamless Handoff:</strong> Full context transfer in one click
                   </div>
@@ -259,9 +259,9 @@ export function Homepage() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <Card className="border-green-200 bg-green-50/50">
+              <Card className="border-blue-200 bg-blue-50/50">
                 <CardHeader>
-                  <CardTitle className="text-green-700">Last Mover Advantage</CardTitle>
+                  <CardTitle className="text-blue-700">Last Mover Advantage</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
@@ -322,83 +322,9 @@ export function Homepage() {
         </div>
       </section>
 
-      {/* Market Opportunity Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-purple-50 to-blue-50">
-        <div className="container mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-              Market Opportunity
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              A massive, underserved market ready for transformation
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Card className="text-center h-full">
-                <CardHeader>
-                  <CardTitle className="text-3xl font-bold text-blue-600">£325M</CardTitle>
-                  <CardDescription className="text-lg">Total Available Market</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    The entire UK primary care administrative market
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <Card className="text-center h-full">
-                <CardHeader>
-                  <CardTitle className="text-3xl font-bold text-purple-600">£52M</CardTitle>
-                  <CardDescription className="text-lg">Serviceable Available Market</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Practices ready to adopt AI-powered solutions
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <Card className="text-center h-full">
-                <CardHeader>
-                  <CardTitle className="text-3xl font-bold text-green-600">£5.2M</CardTitle>
-                  <CardDescription className="text-lg">Target ARR (3 years)</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Our achievable market capture goal
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-green-600">
+      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-blue-800">
         <div className="container mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -433,7 +359,7 @@ export function Homepage() {
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-green-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
                 <Phone className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold">Health Line AI</span>
