@@ -1,5 +1,5 @@
-import { VapiChat } from "@/components/vapi-chat";
+import { Homepage } from "@/components/homepage";
 
 export default function Home() {
-  return <VapiChat />;
+  return <Homepage />;
 }
