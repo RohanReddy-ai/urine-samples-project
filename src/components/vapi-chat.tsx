@@ -9,8 +9,16 @@ import { cn } from "@/lib/utils";
 
 import Vapi from "@vapi-ai/web";
 
-const VAPI_PUBLIC_KEY = "2ff19bc4-1d8c-451d-a415-81501c77e779";
-const ASSISTANT_ID = "95c312b3-1932-4a21-977a-ddcf8cff744e";
+const VAPI_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPI_KEY;
+const ASSISTANT_ID = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
+
+if (!VAPI_PUBLIC_KEY) {
+  throw new Error("NEXT_PUBLIC_VAPI_KEY is not defined in environment variables");
+}
+
+if (!ASSISTANT_ID) {
+  throw new Error("NEXT_PUBLIC_VAPI_ASSISTANT_ID is not defined in environment variables");
+}
 
 export function VapiChat() {
   const [isCallActive, setIsCallActive] = useState(false);
@@ -24,7 +32,8 @@ export function VapiChat() {
   const [userText, setUserText] = useState("");
   const [isAiStreaming, setIsAiStreaming] = useState(false);
   
-  const vapiRef = useRef<unknown>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const vapiRef = useRef<any>(null);
   const currentUserTranscript = useRef<string>("");
   const currentAiTranscript = useRef<string>("");
 
@@ -41,9 +50,10 @@ export function VapiChat() {
   // Initialize VAPI
   useEffect(() => {
     if (!vapiRef.current) {
-      vapiRef.current = new Vapi(VAPI_PUBLIC_KEY);
+      vapiRef.current = new Vapi(VAPI_PUBLIC_KEY!);
       
       // Set up event listeners
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (vapiRef.current as any).on("call-start", () => {
         console.log("Call started");
         setIsCallActive(true);
@@ -52,6 +62,7 @@ export function VapiChat() {
         setIsSpeaking(false);
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (vapiRef.current as any).on("call-end", () => {
         console.log("Call ended");
         setIsCallActive(false);
@@ -60,6 +71,7 @@ export function VapiChat() {
         setIsSpeaking(false);
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (vapiRef.current as any).on("speech-start", () => {
         console.log("User started speaking");
         setIsListening(true);
@@ -67,12 +79,14 @@ export function VapiChat() {
         setIsProcessing(false);
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (vapiRef.current as any).on("speech-end", () => {
         console.log("User stopped speaking");
         setIsListening(false);
         setIsProcessing(true);
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (vapiRef.current as any).on("message", (message: unknown) => {
         console.log("Message received:", message);
         
@@ -114,6 +128,7 @@ export function VapiChat() {
         }
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (vapiRef.current as any).on("error", (error: unknown) => {
         console.error("VAPI error:", error);
         setIsCallActive(false);
@@ -123,6 +138,7 @@ export function VapiChat() {
       });
 
       // Handle connection issues
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (vapiRef.current as any).on("call-failed", (error: unknown) => {
         console.error("VAPI call failed:", error);
         setIsCallActive(false);
@@ -133,8 +149,10 @@ export function VapiChat() {
     }
 
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (vapiRef.current && typeof (vapiRef.current as any).stop === 'function') {
         try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (vapiRef.current as any).stop();
         } catch (error) {
           console.error("Error stopping VAPI:", error);
@@ -148,7 +166,8 @@ export function VapiChat() {
     
     try {
       // Start the call with assistant ID
-      await (vapiRef.current as any).start(ASSISTANT_ID);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (vapiRef.current as any).start(ASSISTANT_ID!);
     } catch (error) {
       console.error("Failed to start call:", error);
     }
@@ -157,6 +176,7 @@ export function VapiChat() {
   const endCall = () => {
     if (vapiRef.current) {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (vapiRef.current as any).stop();
       } catch (error) {
         console.error("Error ending call:", error);
