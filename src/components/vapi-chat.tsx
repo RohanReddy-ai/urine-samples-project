@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { VoiceChat } from "@/components/ui/voice-chat";
+import { TextTranscript } from "@/components/ui/text-transcript";
 import { Phone, PhoneOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-// @ts-expect-error - VAPI Web SDK doesn't have TypeScript definitions
 import Vapi from "@vapi-ai/web";
 
 const VAPI_PUBLIC_KEY = "2ff19bc4-1d8c-451d-a415-81501c77e779";
@@ -19,7 +19,24 @@ export function VapiChat() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [, setVolume] = useState(0);
   
+  // Transcript state for timestamped complete responses
+  const [aiText, setAiText] = useState("");
+  const [userText, setUserText] = useState("");
+  const [isAiStreaming, setIsAiStreaming] = useState(false);
+  
   const vapiRef = useRef<unknown>(null);
+  const currentUserTranscript = useRef<string>("");
+  const currentAiTranscript = useRef<string>("");
+
+  // Helper function to format timestamp
+  const formatTimestamp = () => {
+    const now = new Date();
+    return now.toLocaleTimeString('en-US', { 
+      hour12: false, 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+  };
 
   // Initialize VAPI
   useEffect(() => {
@@ -27,7 +44,7 @@ export function VapiChat() {
       vapiRef.current = new Vapi(VAPI_PUBLIC_KEY);
       
       // Set up event listeners
-      vapiRef.current.on("call-start", () => {
+      (vapiRef.current as any).on("call-start", () => {
         console.log("Call started");
         setIsCallActive(true);
         setIsListening(false);
@@ -35,7 +52,7 @@ export function VapiChat() {
         setIsSpeaking(false);
       });
 
-      vapiRef.current.on("call-end", () => {
+      (vapiRef.current as any).on("call-end", () => {
         console.log("Call ended");
         setIsCallActive(false);
         setIsListening(false);
@@ -43,42 +60,61 @@ export function VapiChat() {
         setIsSpeaking(false);
       });
 
-      vapiRef.current.on("speech-start", () => {
+      (vapiRef.current as any).on("speech-start", () => {
         console.log("User started speaking");
         setIsListening(true);
         setIsSpeaking(false);
         setIsProcessing(false);
       });
 
-      vapiRef.current.on("speech-end", () => {
+      (vapiRef.current as any).on("speech-end", () => {
         console.log("User stopped speaking");
         setIsListening(false);
         setIsProcessing(true);
       });
 
-      vapiRef.current.on("message", (message: unknown) => {
+      (vapiRef.current as any).on("message", (message: unknown) => {
         console.log("Message received:", message);
         
         const msg = message as { 
           type: string; 
           role?: string; 
           status?: string;
+          transcript?: string;
+          transcriptType?: string;
         };
         
-        // Only handle speech-update for visual feedback
+        // Handle transcript events for complete responses only
+        if (msg.type === "transcript" && msg.transcriptType === "final") {
+          const timestamp = formatTimestamp();
+          
+          if (msg.role === "user") {
+            // Add complete user transcript with timestamp
+            const userResponse = `[${timestamp}] You: ${msg.transcript || ''}`;
+            setUserText(prev => prev ? `${prev}\n\n${userResponse}` : userResponse);
+          } else if (msg.role === "assistant") {
+            // Add complete AI transcript with timestamp
+            const aiResponse = `[${timestamp}] AI: ${msg.transcript || ''}`;
+            setAiText(prev => prev ? `${prev}\n\n${aiResponse}` : aiResponse);
+          }
+        }
+        
+        // Handle speech-update for visual feedback
         if (msg.type === "speech-update") {
           if (msg.role === "assistant") {
             if (msg.status === "started") {
               setIsProcessing(false);
               setIsSpeaking(true);
+              setIsAiStreaming(true);
             } else if (msg.status === "stopped") {
               setIsSpeaking(false);
+              setIsAiStreaming(false);
             }
           }
         }
       });
 
-      vapiRef.current.on("error", (error: unknown) => {
+      (vapiRef.current as any).on("error", (error: unknown) => {
         console.error("VAPI error:", error);
         setIsCallActive(false);
         setIsListening(false);
@@ -87,7 +123,7 @@ export function VapiChat() {
       });
 
       // Handle connection issues
-      vapiRef.current.on("call-failed", (error: unknown) => {
+      (vapiRef.current as any).on("call-failed", (error: unknown) => {
         console.error("VAPI call failed:", error);
         setIsCallActive(false);
         setIsListening(false);
@@ -97,9 +133,9 @@ export function VapiChat() {
     }
 
     return () => {
-      if (vapiRef.current && typeof vapiRef.current.stop === 'function') {
+      if (vapiRef.current && typeof (vapiRef.current as any).stop === 'function') {
         try {
-          (vapiRef.current as unknown as { stop: () => void }).stop();
+          (vapiRef.current as any).stop();
         } catch (error) {
           console.error("Error stopping VAPI:", error);
         }
@@ -112,7 +148,7 @@ export function VapiChat() {
     
     try {
       // Start the call with assistant ID
-      await (vapiRef.current as unknown as { start: (assistantId: string) => Promise<void> }).start(ASSISTANT_ID);
+      await (vapiRef.current as any).start(ASSISTANT_ID);
     } catch (error) {
       console.error("Failed to start call:", error);
     }
@@ -121,11 +157,18 @@ export function VapiChat() {
   const endCall = () => {
     if (vapiRef.current) {
       try {
-        (vapiRef.current as unknown as { stop: () => void }).stop();
+        (vapiRef.current as any).stop();
       } catch (error) {
         console.error("Error ending call:", error);
       }
     }
+    
+    // Reset transcript state
+    setAiText("");
+    setUserText("");
+    setIsAiStreaming(false);
+    currentUserTranscript.current = "";
+    currentAiTranscript.current = "";
   };
 
   const toggleCall = () => {
@@ -138,8 +181,8 @@ export function VapiChat() {
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Voice Interface - Full Screen */}
-      <div className="flex-1 flex flex-col">
+      {/* Left side - Voice Interface */}
+      <div className="w-1/2 flex flex-col">
         <div className="flex-1">
           <VoiceChat
             isListening={isListening}
@@ -177,6 +220,29 @@ export function VapiChat() {
                 </>
               )}
             </motion.button>
+          </div>
+        </div>
+      </div>
+
+      {/* Right side - Timestamped Transcript */}
+      <div className="w-1/2 border-l border-gray-200 dark:border-gray-700">
+        <div className="h-full flex flex-col">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+              Conversation Transcript
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Timestamped complete responses from voice conversation
+            </p>
+          </div>
+          
+          <div className="flex-1">
+            <TextTranscript
+              aiText={aiText}
+              userText={userText}
+              isAiStreaming={isAiStreaming}
+              className="h-full"
+            />
           </div>
         </div>
       </div>
