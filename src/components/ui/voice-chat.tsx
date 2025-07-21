@@ -153,13 +153,13 @@ export function VoiceChat({
   };
 
   return (
-    <div className={cn("flex flex-col items-center justify-center min-h-screen bg-background relative overflow-hidden", className)}>
+    <div className={cn("flex flex-col items-center justify-center min-h-screen bg-blue-100 dark:bg-blue-900 relative overflow-hidden", className)}>
       {/* Ambient particles */}
       <div className="absolute inset-0 overflow-hidden">
         {particles.map(particle => (
           <motion.div
             key={particle.id}
-            className="absolute w-1 h-1 bg-primary/20 rounded-full"
+            className="absolute w-1 h-1 bg-blue-500/30 rounded-full"
             style={{
               left: particle.x,
               top: particle.y,
@@ -180,7 +180,7 @@ export function VoiceChat({
       {/* Background glow effects */}
       <div className="absolute inset-0 flex items-center justify-center">
         <motion.div
-          className="w-96 h-96 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 blur-3xl"
+          className="w-96 h-96 rounded-full bg-gradient-to-r from-blue-400/20 via-blue-500/20 to-blue-600/20 blur-3xl"
           animate={{
             scale: isListening ? [1, 1.2, 1] : [1, 1.1, 1],
             opacity: isListening ? [0.3, 0.6, 0.3] : [0.1, 0.2, 0.1]
@@ -204,11 +204,11 @@ export function VoiceChat({
             onClick={handleToggleListening}
             className={cn(
               "relative w-32 h-32 rounded-full flex items-center justify-center transition-all duration-300",
-              "bg-gradient-to-br from-primary/20 to-primary/10 border-2",
+              "bg-gradient-to-br from-blue-500/20 to-blue-400/10 border-2",
               isListening ? "border-blue-500 shadow-lg shadow-blue-500/25" :
               isProcessing ? "border-yellow-500 shadow-lg shadow-yellow-500/25" :
               isSpeaking ? "border-green-500 shadow-lg shadow-green-500/25" :
-              "border-border hover:border-primary/50"
+              "border-blue-300 hover:border-blue-500"
             )}
             animate={{
               boxShadow: isListening 
@@ -228,7 +228,7 @@ export function VoiceChat({
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                 >
-                  <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
+                  <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
                 </motion.div>
               ) : isSpeaking ? (
                 <motion.div
@@ -237,7 +237,7 @@ export function VoiceChat({
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                 >
-                  <Volume2 className="w-12 h-12 text-green-500" />
+                  <Volume2 className="w-12 h-12 text-blue-600" />
                 </motion.div>
               ) : isListening ? (
                 <motion.div
@@ -255,7 +255,7 @@ export function VoiceChat({
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                 >
-                  <Mic className="w-12 h-12 text-muted-foreground" />
+                  <Mic className="w-12 h-12 text-blue-400" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -299,9 +299,9 @@ export function VoiceChat({
               className={cn(
                 "w-1 rounded-full transition-colors duration-300",
                 isListening ? "bg-blue-500" :
-                isProcessing ? "bg-yellow-500" :
-                isSpeaking ? "bg-green-500" :
-                "bg-muted"
+                isProcessing ? "bg-blue-400" :
+                isSpeaking ? "bg-blue-600" :
+                "bg-blue-200"
               )}
               animate={{
                 height: `${Math.max(4, height * 0.6)}px`,
@@ -338,7 +338,7 @@ export function VoiceChat({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <VolumeX className="w-4 h-4 text-muted-foreground" />
+              <VolumeX className="w-4 h-4 text-blue-500" />
               <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-blue-500 rounded-full"
@@ -346,14 +346,14 @@ export function VoiceChat({
                   transition={{ duration: 0.1 }}
                 />
               </div>
-              <Volume2 className="w-4 h-4 text-muted-foreground" />
+              <Volume2 className="w-4 h-4 text-blue-500" />
             </motion.div>
           )}
         </div>
 
-        {/* AI indicator */}
+        {/* Text to Speech Voice Model indicator */}
         <motion.div
-          className="flex items-center space-x-2 text-sm text-muted-foreground"
+          className="flex items-center space-x-2 text-sm text-blue-600"
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{
             duration: 3,
@@ -362,7 +362,7 @@ export function VoiceChat({
           }}
         >
           <Sparkles className="w-4 h-4" />
-          <span>AI Voice Assistant</span>
+          <span>Text to Speech Voice Model</span>
         </motion.div>
       </div>
     </div>

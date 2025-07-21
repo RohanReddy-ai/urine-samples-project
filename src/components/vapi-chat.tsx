@@ -10,15 +10,12 @@ import { cn } from "@/lib/utils";
 import Vapi from "@vapi-ai/web";
 
 const VAPI_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPI_KEY;
-const ASSISTANT_ID = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
+const ASSISTANT_ID = "b6ab639c-3d6c-435d-9668-4d3798b66445";
 
 if (!VAPI_PUBLIC_KEY) {
   throw new Error("NEXT_PUBLIC_VAPI_KEY is not defined in environment variables");
 }
 
-if (!ASSISTANT_ID) {
-  throw new Error("NEXT_PUBLIC_VAPI_ASSISTANT_ID is not defined in environment variables");
-}
 
 export function VapiChat() {
   const [isCallActive, setIsCallActive] = useState(false);
@@ -107,8 +104,8 @@ export function VapiChat() {
             const userResponse = `[${timestamp}] You: ${msg.transcript || ''}`;
             setUserText(prev => prev ? `${prev}\n\n${userResponse}` : userResponse);
           } else if (msg.role === "assistant") {
-            // Add complete AI transcript with timestamp
-            const aiResponse = `[${timestamp}] AI: ${msg.transcript || ''}`;
+            // Add complete text to speech voice model transcript with timestamp
+            const aiResponse = `[${timestamp}] Text to Speech Voice Model: ${msg.transcript || ''}`;
             setAiText(prev => prev ? `${prev}\n\n${aiResponse}` : aiResponse);
           }
         }
@@ -167,7 +164,7 @@ export function VapiChat() {
     try {
       // Start the call with assistant ID
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (vapiRef.current as any).start(ASSISTANT_ID!);
+      await (vapiRef.current as any).start(ASSISTANT_ID);
     } catch (error) {
       console.error("Failed to start call:", error);
     }
@@ -200,7 +197,7 @@ export function VapiChat() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex h-[calc(100vh-120px)] bg-blue-50 dark:bg-blue-900">
       {/* Left side - Voice Interface */}
       <div className="w-1/2 flex flex-col">
         <div className="flex-1">
@@ -215,7 +212,7 @@ export function VapiChat() {
         </div>
         
         {/* Control buttons */}
-        <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-t border-blue-200 dark:border-blue-700">
           <div className="flex justify-center space-x-4">
             <motion.button
               onClick={toggleCall}
@@ -224,7 +221,7 @@ export function VapiChat() {
               className={cn(
                 "flex items-center space-x-2 px-6 py-3 rounded-full font-medium transition-all",
                 isCallActive
-                  ? "bg-red-500 hover:bg-red-600 text-white"
+                  ? "bg-blue-700 hover:bg-blue-800 text-white"
                   : "bg-blue-500 hover:bg-blue-600 text-white"
               )}
             >
@@ -245,13 +242,13 @@ export function VapiChat() {
       </div>
 
       {/* Right side - Timestamped Transcript */}
-      <div className="w-1/2 border-l border-gray-200 dark:border-gray-700">
+      <div className="w-1/2 border-l border-blue-200 dark:border-blue-700">
         <div className="h-full flex flex-col">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          <div className="px-6 py-4 border-b border-blue-200 dark:border-blue-700 bg-blue-100 dark:bg-blue-800">
+            <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-100">
               Conversation Transcript
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-blue-600 dark:text-blue-200">
               Timestamped complete responses from voice conversation
             </p>
           </div>
